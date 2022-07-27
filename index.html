@@ -118,15 +118,58 @@
             return;
           }
 
+
+
           if (currentAnchoredElement.classList.contains("grid-item") && !currentAnchoredElement.classList.contains("link-selected-anchor")) {
             currentAnchoredElement.classList.add("link-selected-anchor");
+
+            let itemData = this.getGridItemData(currentAnchoredElement.id);
+
+            let head = document.querySelector()
           }
 
           setTimeout(() => {
             currentAnchoredElement.scrollIntoView();
           }, 2000);
         });
-      }
+      },
+      methods: {
+        getGridItemData: function (elementId) {
+          let element = document.querySelector(`#${elementId}`);
+
+          if (!element) {
+            return null;
+          }
+
+          console.log(element.querySelector(".grid-item-container > .grid-item-credits > .grid-item-credit-list > .grid-item-credit-list-item"));
+
+          let buttons = [];
+          element.querySelectorAll(".grid-item-container > .grid-item-button-container > a.hevort-btn").forEach((buttonElement) => {
+            buttons.push({title: buttonElement.querySelector(".hevort-btn-text").innerText, link: buttonElement.href})
+          });
+
+          let credits = [];
+          element.querySelectorAll(".grid-item-container > .grid-item-credits > .grid-item-credit-list > .grid-item-credit-list-item").forEach((creditElement) => {
+            credits.push({
+              name: creditElement.querySelector(".grid-item-credit-list-item-name").innerText,
+              description: creditElement.querySelector(".grid-item-credit-list-item-description").innerHTML
+            });
+          });
+
+          let titleWrapper = element.querySelector(".grid-item-title-wrapper > .grid-item-title-inner-wrapper");
+
+
+          return {
+            title: titleWrapper.querySelector(".grid-item-title").innerHTML,
+            link: titleWrapper.querySelector(".grid-item-title").href,
+            state: titleWrapper.querySelector(".grid-item-state")?.innerHTML ?? "active",
+            image:  element.querySelector(".grid-item-container > img").src,
+            description:  element.querySelector(".grid-item-container > .grid-item-description-container > .grid-item-description").innerHTML,
+            buttons: buttons,
+            credits: credits
+          }
+        },
+      },
     },
     vueComponents: {
       'grid': {
@@ -171,7 +214,7 @@
           <li class="grid-item-credit-list-item">
           <div class="grid-item-credit-list-item-wrapper">
             <span class="grid-item-credit-list-item-name">{{ name }}</span>
-            <span>
+            <span class="grid-item-credit-list-item-description">
                 <slot></slot>
               </span>
           </div>
