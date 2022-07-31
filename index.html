@@ -247,8 +247,8 @@
             for(let i = 0; i < this.availableFilters.length; i++) {
               let filterName = this.availableFilters[i];
               let regEx = new RegExp(`${filterName}="(.*?)"`, "g");
-              let match;
-              while (match = regEx.exec(text)) {
+              let matches = regEx.exec(text) !== null;
+              if (matches) {
                 return true;
               }
             }
@@ -279,10 +279,10 @@
               gridItemsData.push(this.$root.getGridItemData(gridItem.id));
             })
 
-            if (!this.isAnyAdvancedFilter(text)) {
-              this.handleFilterItemsNormal(advancedFilterData, text);
-            } else {
+            if (this.isAnyAdvancedFilter(text)) {
               this.handleFilterItemsAdvanced(advancedFilterData, text);
+            } else {
+              this.handleFilterItemsNormal(advancedFilterData, text);
             }
           },
           getGridItemData: function ()
