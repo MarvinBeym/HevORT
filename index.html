@@ -134,6 +134,23 @@
         });
       },
       methods: {
+        getComponentsByElementClass: function (startComponent, cssClass) {
+          //                gridItem.$el.querySelectorAll(".grid-item-container > .grid-item-tag-container > .grid-item-tag-inner-container > .grid-item-tag").forEach()
+
+          let foundComps = [];
+
+          if (startComponent.$el.classList.contains(cssClass)) {
+            foundComps.push(startComponent);
+          }
+
+          for(let i = 0; i < startComponent.$children.length; i++) {
+            let child = startComponent.$children[i];
+            let result = this.getComponentsByElementClass(child, cssClass);
+            foundComps = [...foundComps, ...result];
+          }
+
+          return foundComps;
+        },
         getGridItemData: function (elementId) {
           let element = document.querySelector(`#${elementId}`);
 
@@ -459,8 +476,15 @@
                 searchInput.value += tagText;
               }
 
+              let itemTagContainerComps = this.$root.getComponentsByElementClass(this.$parent.$parent.$parent, "grid-item-tag-container");
 
-              tagElement.classList.add("grid-item-tag-remove");
+              itemTagContainerComps.forEach((itemTagContainerComp) => {
+                itemTagContainerComp.$children.forEach((itemTag) => {
+                  if (itemTag.$el.innerText.includes(text)) {
+                    itemTag.$el.classList.add("grid-item-tag-remove");
+                  }
+                });
+              });
             }
 
             searchInput.dispatchEvent(new Event('input'));
