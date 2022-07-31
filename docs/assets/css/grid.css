@@ -37,8 +37,11 @@
 }
 
 .grid-search-info {
+    white-space: pre;
+    flex-wrap: wrap;
+    display: flex;
     font-size: small;
-    padding: 0 1rem;
+    padding: 0 0.5rem;
 }
 
 .grid-search-info-filter {
